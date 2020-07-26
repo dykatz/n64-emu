@@ -41,9 +41,9 @@ extern Memory mem;
 uint8_t
 busread(uint32_t address)
 {
-    switch (address) {
-		case 0x00000000 ... 0x03EFFFFF: //RDRAM Memory
-			
+	switch (address) {
+	case 0x00000000 ... 0x03EFFFFF: /* RDRAM Memory */
+
 	}
 }
 #endif
