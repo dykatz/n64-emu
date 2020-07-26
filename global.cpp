@@ -26,31 +26,38 @@
 
 #include "cpu.h"
 #include "mem.h"
+#include "rcp.h"
 
 Registers reg;
 Registers rcp;
 Memory mem;
 
-uint16_t signExtend(uint8_t in){
-	if((in & 0b10000000) >> 8){
+uint16_t
+signExtend(uint8_t in)
+{
+    if ((in & 0b10000000) >> 8) {
 		return 0b1111111100000000 & in;
-	}else{
+    } else {
 		return 0b0000000000000000 & in;
 	}
 }
 
-uint32_t signExtend(uint16_t in){
-	if((in & 0b1000000000000000) >> 16){
+uint32_t
+signExtend(uint16_t in)
+{
+    if ((in & 0b1000000000000000) >> 16) {
 		return 0b11111111111111110000000000000000 & in;
-	}else{
+    } else {
 		return 0b00000000000000000000000000000000 & in;
 	}
 }
 
-uint64_t signExtend(uint32_t in){
-	if((in & 0b10000000000000000000000000000000) >> 31){
+uint64_t
+signExtend(uint32_t in)
+{
+    if ((in & 0b10000000000000000000000000000000) >> 31) {
 		return 0b1111111111111111111111111111111100000000000000000000000000000000 & in;
-	}else{
+    } else {
 		return 0b0000000000000000000000000000000000000000000000000000000000000000 & in;
 	}
 }

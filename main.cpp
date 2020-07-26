@@ -35,28 +35,35 @@
 #include "cpu.h"
 #include "rcp.h"
 
-using namespace std;
 extern Registers reg;
 extern Registers rcp;
 
-/* Personal Notes:
+/*
+ * Personal Notes:
  * -COP0 is
  * -COP1 is an internal 64-bit FPU
  * -COP2 is 
  * -COP3 is
  */
 
-int main(int argc, char** argv) {
+int
+main(int argc, char *argv[])
+{
+    (void)argc;
+    (void)argv;
+
 	return 0;
 }
 
-void tick(){
-	for(long long i = 0; i < 31248125; i++){
-		for(int j = 0; j < 3; j++){
+void
+tick()
+{
+    for (long long i = 0; i < 31248125; i++) {
+        for (int j = 0; j < 3; j++) {
 			execCPU(mem.mem[reg.pc], false);
 			reg.pc++;
 		}
-		for(int k = 0; k < 2; k++){
+        for (int k = 0; k < 2; k++) {
 			execRCP(mem.mem[rcp.pc], false);
 			rcp.pc++;
 		}

@@ -29,17 +29,23 @@
 
 #include <cstdint>
 
-struct Memory{
+struct Memory
+{
 	bool expansionPak;
 	uint8_t mem[8388608];
 };
 
 extern Memory mem;
-/*uint8_t busread(uint32_t address){
-	switch(address){
+
+#if 0
+uint8_t
+busread(uint32_t address)
+{
+    switch (address) {
 		case 0x00000000 ... 0x03EFFFFF: //RDRAM Memory
 			
 	}
-}*/
+}
+#endif
 
 #endif /* MEM_H */

@@ -27,6 +27,12 @@
 #ifndef RCP_H
 #define RCP_H
 
-void execRCP(uint32_t opcode, bool parseOnly);
+#include <cstdint>
+
+#include "cpu.h"
+
+extern Registers rcp;
+
+extern void execRCP(uint32_t opcode, bool parseOnly);
 
 #endif /* RCP_H */
