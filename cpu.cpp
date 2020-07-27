@@ -388,6 +388,15 @@ execCPU(uint32_t opcode, bool parseOnly)
 						break;
 					}
 				}
+				if ((rs & 0b00010000) >> 7) { /* COP0 */
+					/* TODO */
+					break;
+				}
+				if (rs == 0b0000110) {
+					if(opcode & 0b00000000000000000000011111111111) { /* CTC0 */
+						/* TODO */
+					}
+				}
 				break;
 			case 0b00010001:
 				if ((sa == 0) && (funct == 0)) {
@@ -395,6 +404,15 @@ execCPU(uint32_t opcode, bool parseOnly)
 					case 0b00000010: /* CFC1 */
 						/* TODO */
 						break;
+					}
+				}
+				if ((rs & 0b00010000) >> 7) { /* COP1 */
+					/* TODO */
+					break;
+				}
+				if (rs == 0b0000110) {
+					if(opcode & 0b00000000000000000000011111111111) { /* CTC1 */
+						/* TODO */
 					}
 				}
 				break;
@@ -406,6 +424,15 @@ execCPU(uint32_t opcode, bool parseOnly)
 						break;
 					}
 				}
+				if ((rs & 0b00010000) >> 7) { /* COP2 */
+					/* TODO */
+					break;
+				}
+				if (rs == 0b0000110) {
+					if(opcode & 0b00000000000000000000011111111111) { /* CTC2 */
+						/* TODO */
+					}
+				}
 				break;
 			case 0b00010011:
 				if ((sa == 0) && (funct == 0)) {
@@ -415,56 +442,16 @@ execCPU(uint32_t opcode, bool parseOnly)
 						break;
 					}
 				}
-				break;
-			case 0b00010000:
-				if ((rs & 0b00010000) >> 7) { /* COP0 */
-					/* TODO */
-				}
-				break;
-			case 0b00010001:
-				if ((rs & 0b00010000) >> 7) { /* COP1 */
-					/* TODO */
-				}
-				break;
-			case 0b00010010:
-				if ((rs & 0b00010000) >> 7) { /* COP2 */
-					/* TODO */
-				}
-				break;
-			case 0b00010011:
 				if ((rs & 0b00010000) >> 7) { /* COP3 */
 					/* TODO */
+					break;
 				}
-				break;
-			case 0b00010000:
-				if (rs == 0b0000110) {
-					if(opcode & 0b00000000000000000000011111111111) { /* CTC0 */
-						/* TODO */
-					}
-				}
-				break;
-			case 0b00010001:
-				if (rs == 0b0000110) {
-					if(opcode & 0b00000000000000000000011111111111) { /* CTC1 */
-						/* TODO */
-					}
-				}
-				break;
-			case 0b00010010:
-				if (rs == 0b0000110) {
-					if(opcode & 0b00000000000000000000011111111111) { /* CTC2 */
-						/* TODO */
-					}
-				}
-				break;
-			case 0b00010011:
 				if (rs == 0b0000110) {
 					if(opcode & 0b00000000000000000000011111111111) { /* CTC3 */
 						/* TODO */
 					}
 				}
 				break;
-
 			default:
 				throw new UnknownOpcodeException(opcode);
 			}
