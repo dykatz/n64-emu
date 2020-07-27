@@ -27,7 +27,6 @@
 #include <SDL.h>
 #include <climits>
 #include <cstdlib>
-#include <exception>
 #include <fstream>
 #include <iostream>
 #include <string>

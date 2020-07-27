@@ -30,7 +30,7 @@
 #include <iostream>
 #include <string>
 
-#include "cpu.h"
+#include "rcp.h"
 #include "mem.h"
 
 static int branchRCP = -1;
@@ -96,318 +96,310 @@ execRCP(uint32_t opcode, bool parseOnly)
 	uint8_t sa = opcode & 0b00000000000000000000011111000000 >> 6;
 	uint8_t funct = opcode & 0b00000000000000000000000000111111;
 
-	try {
-		if (!parseOnly) {
-			switch (op) {
-			case 0b00000000:
-				if (sa == 0b00000000) {
-					switch (funct) {
-					case 0b00100000: /* ADD */
-						if (reg.gpr[rs] <
-						    INT_MAX - reg.gpr[rt]) {
-							throw new IntegerOverflowException(
-								reg.gpr[rs],
-								reg.gpr[rt]);
-						}
-						reg.gpr[rd] =
-							((signed)reg.gpr[rs] +
-							 (signed)reg.gpr[rt]);
-						break;
-					case 0b00100001: /* ADDU */
-						reg.gpr[rd] = (reg.gpr[rs] +
-							       reg.gpr[rt]);
-						break;
-					case 0b00100100: /* AND */
-						reg.gpr[rd] = (reg.gpr[rs] &
-							       reg.gpr[rt]);
+	if (!parseOnly) {
+		switch (op) {
+		case 0b00000000:
+			if (sa == 0b00000000) {
+				switch (funct) {
+				case 0b00100000: /* ADD */
+					if (rcp.gpr[rs] <
+							INT_MAX - rcp.gpr[rt]) {
+						throw new IntegerOverflowException(
+									rcp.gpr[rs],
+									rcp.gpr[rt]);
 					}
-				} else {
-					switch (funct) {
-					case 0b00001101: /* BREAK */
-						/* TODO */
-						break;
-					}
-				}
-				break;
-			case 0b00001000: /* ADDI */
-				if (reg.gpr[rs] <
-				    INT_MAX - reg.gpr[signExtend(immediate)]) {
-					throw new IntegerOverflowException(
-						reg.gpr[rs], reg.gpr[rt]);
-				}
-				reg.gpr[rt] = ((signed)reg.gpr[rs] +
-					       (signed)signExtend(immediate));
-				break;
-			case 0b00001001: /* ADDIU */
-				reg.gpr[rt] =
-					(reg.gpr[rs] + signExtend(immediate));
-				break;
-			case 0b00001100: /* ANDI */
-				reg.gpr[rt] = (reg.gpr[rs] & immediate);
-				break;
-			case 0b00010000:
-				switch (rs) {
-				case 0b00001000:
-					switch (rt) {
-					case 0b00000000: /* BC0F */
-						/* TODO */
-						break;
-					case 0b00000010: /* BC0FL */
-						/* TODO */
-						break;
-					case 0b00000001: /* BC0T */
-						/* TODO */
-						break;
-					case 0b00000011: /* BC0TL */
-						/* TODO */
-						break;
-					}
-				}
-				break;
-			case 0b00010001:
-				switch (rs) {
-				case 0b00001000:
-					switch (rt) {
-					case 0b00000000: /* BC1F */
-						/* TODO */
-						break;
-					case 0b00000010: /* BC1FL */
-						/* TODO */
-						break;
-					case 0b00000001: /* BC1T */
-						/* TODO */
-						break;
-					case 0b00000011: /* BC1TL */
-						/* TODO */
-						break;
-					}
-				}
-				break;
-			case 0b00010010:
-				switch (rs) {
-				case 0b00001000:
-					switch (rt) {
-					case 0b00000000: /* BC2F */
-						/* TODO */
-						break;
-					case 0b00000010: /* BC2FL */
-						/* TODO */
-						break;
-					case 0b00000001: /* BC2T */
-						/* TODO */
-						break;
-					case 0b00000011: /* BC2TL */
-						/* TODO */
-						break;
-					}
-				}
-				break;
-			case 0b00000100: /* BEQ */
-				if (reg.gpr[rs] == reg.gpr[rt]) {
-					branchRCP =
-						mem.mem[reg.pc + 1] +
-						(signExtend(immediate) << 2);
-				}
-				break;
-			case 0b00010100: /* BEQL */
-				if (reg.gpr[rs] == reg.gpr[rt]) {
-					branchRCP =
-						mem.mem[reg.pc + 1] +
-						(signExtend(immediate) << 2);
-				} else {
-					reg.pc++;
-				}
-				break;
-			case 0b00000001:
-				switch (rt) {
-				case 0b00000001: /* BGEZ */
-					if (reg.gpr[rs] >= 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					}
+					rcp.gpr[rd] =
+							((signed)rcp.gpr[rs] +
+							 (signed)rcp.gpr[rt]);
 					break;
-				case 0b00010001: /* BGEZAL */
-					reg.gpr[31] = mem.mem[reg.pc + 1];
-					if (reg.gpr[rs] >= 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					}
+				case 0b00100001: /* ADDU */
+					rcp.gpr[rd] = (rcp.gpr[rs] +
+						       rcp.gpr[rt]);
 					break;
-				case 0b00010011: /* BGEZALL */
-					reg.gpr[31] = mem.mem[reg.pc + 1];
-					if (reg.gpr[rs] >= 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					} else {
-						reg.pc++;
-					}
-					break;
-				case 0b00000011: /* BGEZL */
-					if (reg.gpr[rs] >= 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					} else {
-						reg.pc++;
-					}
-					break;
-				case 0b00000000: /* BLTZ */
-					if (reg.gpr[rs] < 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					}
-					break;
-				case 0b00010000: /* BLTZAL */
-					reg.gpr[31] = mem.mem[reg.pc + 1];
-					if (reg.gpr[rs] < 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					}
-					break;
-				case 0b00010010: /* BLTZALL */
-					reg.gpr[31] = mem.mem[reg.pc + 1];
-					if (reg.gpr[rs] < 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					} else {
-						reg.pc++;
-					}
-					break;
-				case 0b00000010: /* BLTZL */
-					if (reg.gpr[rs] < 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					} else {
-						reg.pc++;
-					}
+				case 0b00100100: /* AND */
+					rcp.gpr[rd] = (rcp.gpr[rs] &
+						       rcp.gpr[rt]);
+				}
+			} else {
+				switch (funct) {
+				case 0b00001101: /* BREAK */
+					/* TODO */
 					break;
 				}
-				break;
-			case 0b00000111:
-				switch (rt) {
-				case 0b00000000: /* BGTZ */
-					if (reg.gpr[rs] > 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					}
-					break;
-				}
-				break;
-			case 0b00010111:
-				switch (rt) {
-				case 0b00000000: /* BGTZL */
-					if (reg.gpr[rs] > 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					} else {
-						reg.pc++;
-					}
-					break;
-				}
-				break;
-			case 0b00000110:
-				switch (rt) {
-				case 0b00000000: /* BLEZ */
-					if (reg.gpr[rs] <= 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					}
-					break;
-				}
-				break;
-			case 0b00010110:
-				switch (rt) {
-				case 0b00000000: /* BLEZL */
-					if (reg.gpr[rs] <= 0) {
-						branchRCP =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
-					} else {
-						reg.pc++;
-					}
-					break;
-				}
-				break;
-			case 0b00000101: /* BNE */
-				if (reg.gpr[rs] != reg.gpr[rt]) {
-					branchRCP =
-						mem.mem[reg.pc + 1] +
-						(signExtend(immediate) << 2);
-				}
-				break;
-			case 0b00010101: /* BNEL */
-				if (reg.gpr[rs] != reg.gpr[rt]) {
-					branchRCP =
-						mem.mem[reg.pc + 1] +
-						(signExtend(immediate) << 2);
-				} else {
-					reg.pc++;
-				}
-				break;
-			case 0b00101111: /* CACHE */
-				/* TODO */
-				break;
-			default:
-				throw new UnknownOpcodeException(opcode);
 			}
-			if (branchRCP >= 0) {
-				reg.pc = branchRCP;
-				branchRCP = -1;
+			break;
+		case 0b00001000: /* ADDI */
+			if (rcp.gpr[rs] <
+					INT_MAX - rcp.gpr[signExtend(immediate)]) {
+				throw new IntegerOverflowException(
+							rcp.gpr[rs], rcp.gpr[rt]);
 			}
-		} else {
-			switch (op) {
-			case 0b00000000: /* ADD */
-				std::cout << "ADD";
-				break;
-			case 0b00001000: /* ADDI */
-				std::cout << "ADDI";
-				break;
-			case 0b00001001: /* ADDIU */
-				std::cout << "ADDIU";
-				break;
-			case 0b00101111: /* CACHE */
-				/* TODO */
-				break;
-			case 0b00010000:
-				if ((sa == 0) && (funct == 0)) {
-					switch (rs) {
-					case 0b00000010: /* CFC0 */
-
-						break;
-					}
+			rcp.gpr[rt] = ((signed)rcp.gpr[rs] +
+				       (signed)signExtend(immediate));
+			break;
+		case 0b00001001: /* ADDIU */
+			rcp.gpr[rt] =
+					(rcp.gpr[rs] + signExtend(immediate));
+			break;
+		case 0b00001100: /* ANDI */
+			rcp.gpr[rt] = (rcp.gpr[rs] & immediate);
+			break;
+		case 0b00010000:
+			switch (rs) {
+			case 0b00001000:
+				switch (rt) {
+				case 0b00000000: /* BC0F */
+					/* TODO */
+					break;
+				case 0b00000010: /* BC0FL */
+					/* TODO */
+					break;
+				case 0b00000001: /* BC0T */
+					/* TODO */
+					break;
+				case 0b00000011: /* BC0TL */
+					/* TODO */
+					break;
+				}
+			}
+			break;
+		case 0b00010001:
+			switch (rs) {
+			case 0b00001000:
+				switch (rt) {
+				case 0b00000000: /* BC1F */
+					/* TODO */
+					break;
+				case 0b00000010: /* BC1FL */
+					/* TODO */
+					break;
+				case 0b00000001: /* BC1T */
+					/* TODO */
+					break;
+				case 0b00000011: /* BC1TL */
+					/* TODO */
+					break;
+				}
+			}
+			break;
+		case 0b00010010:
+			switch (rs) {
+			case 0b00001000:
+				switch (rt) {
+				case 0b00000000: /* BC2F */
+					/* TODO */
+					break;
+				case 0b00000010: /* BC2FL */
+					/* TODO */
+					break;
+				case 0b00000001: /* BC2T */
+					/* TODO */
+					break;
+				case 0b00000011: /* BC2TL */
+					/* TODO */
+					break;
+				}
+			}
+			break;
+		case 0b00000100: /* BEQ */
+			if (rcp.gpr[rs] == rcp.gpr[rt]) {
+				branchRCP =
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
+			}
+			break;
+		case 0b00010100: /* BEQL */
+			if (rcp.gpr[rs] == rcp.gpr[rt]) {
+				branchRCP =
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
+			} else {
+				rcp.pc++;
+			}
+			break;
+		case 0b00000001:
+			switch (rt) {
+			case 0b00000001: /* BGEZ */
+				if (rcp.gpr[rs] >= 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
 				}
 				break;
-			default:
-				throw new UnknownOpcodeException(opcode);
+			case 0b00010001: /* BGEZAL */
+				rcp.gpr[31] = mem.mem[rcp.pc + 1];
+				if (rcp.gpr[rs] >= 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
+				}
+				break;
+			case 0b00010011: /* BGEZALL */
+				rcp.gpr[31] = mem.mem[rcp.pc + 1];
+				if (rcp.gpr[rs] >= 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
+				} else {
+					rcp.pc++;
+				}
+				break;
+			case 0b00000011: /* BGEZL */
+				if (rcp.gpr[rs] >= 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
+				} else {
+					rcp.pc++;
+				}
+				break;
+			case 0b00000000: /* BLTZ */
+				if (rcp.gpr[rs] < 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
+				}
+				break;
+			case 0b00010000: /* BLTZAL */
+				rcp.gpr[31] = mem.mem[rcp.pc + 1];
+				if (rcp.gpr[rs] < 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
+				}
+				break;
+			case 0b00010010: /* BLTZALL */
+				rcp.gpr[31] = mem.mem[rcp.pc + 1];
+				if (rcp.gpr[rs] < 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
+				} else {
+					rcp.pc++;
+				}
+				break;
+			case 0b00000010: /* BLTZL */
+				if (rcp.gpr[rs] < 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
+				} else {
+					rcp.pc++;
+				}
+				break;
 			}
+			break;
+		case 0b00000111:
+			switch (rt) {
+			case 0b00000000: /* BGTZ */
+				if (rcp.gpr[rs] > 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
+				}
+				break;
+			}
+			break;
+		case 0b00010111:
+			switch (rt) {
+			case 0b00000000: /* BGTZL */
+				if (rcp.gpr[rs] > 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
+				} else {
+					rcp.pc++;
+				}
+				break;
+			}
+			break;
+		case 0b00000110:
+			switch (rt) {
+			case 0b00000000: /* BLEZ */
+				if (rcp.gpr[rs] <= 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
+				}
+				break;
+			}
+			break;
+		case 0b00010110:
+			switch (rt) {
+			case 0b00000000: /* BLEZL */
+				if (rcp.gpr[rs] <= 0) {
+					branchRCP =
+							mem.mem[rcp.pc + 1] +
+							(signExtend(immediate)
+							 << 2);
+				} else {
+					rcp.pc++;
+				}
+				break;
+			}
+			break;
+		case 0b00000101: /* BNE */
+			if (rcp.gpr[rs] != rcp.gpr[rt]) {
+				branchRCP =
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
+			}
+			break;
+		case 0b00010101: /* BNEL */
+			if (rcp.gpr[rs] != rcp.gpr[rt]) {
+				branchRCP =
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
+			} else {
+				rcp.pc++;
+			}
+			break;
+		case 0b00101111: /* CACHE */
+			/* TODO */
+			break;
+		default:
+			throw new UnknownOpcodeException(opcode);
 		}
-	} catch (UnknownOpcodeException &a) {
-		std::cout << "Unknown Opcode Exception: " << a.opcode()
-			  << std::endl;
-	} catch (MIPSInternalException &b) {
-		std::cout << "MIPS Internal Exception: " << b.type()
-			  << std::endl;
+		if (branchRCP >= 0) {
+			rcp.pc = branchRCP;
+			branchRCP = -1;
+		}
+	} else {
+		switch (op) {
+		case 0b00000000: /* ADD */
+			std::cout << "ADD";
+			break;
+		case 0b00001000: /* ADDI */
+			std::cout << "ADDI";
+			break;
+		case 0b00001001: /* ADDIU */
+			std::cout << "ADDIU";
+			break;
+		case 0b00101111: /* CACHE */
+			/* TODO */
+			break;
+		case 0b00010000:
+			if ((sa == 0) && (funct == 0)) {
+				switch (rs) {
+				case 0b00000010: /* CFC0 */
+
+					break;
+				}
+			}
+			break;
+		default:
+			throw new UnknownOpcodeException(opcode);
+		}
 	}
 }

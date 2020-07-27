@@ -28,10 +28,6 @@
 
 #include <cstdint>
 
-class UnknownOpcodeException;
-class MIPSInternalException;
-class IntegerOverflowException;
-
 struct Registers {
 	uint64_t pc;
 	uint64_t hi;
