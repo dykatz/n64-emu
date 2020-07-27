@@ -28,6 +28,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+
 #include "rcp.h"
 #include "mem.h"
 
@@ -258,14 +259,14 @@ execRCP(uint32_t opcode, bool parseOnly)
 			break;
 		case 0b00000100: /* BEQ */
 			if (rcp.gpr[rs] == rcp.gpr[rt]) {
-				branchNext =
+				branchRCP =
 						mem.mem[rcp.pc + 1] +
 						(signExtend(immediate) << 2);
 			}
 			break;
 		case 0b00010100: /* BEQL */
 			if (rcp.gpr[rs] == rcp.gpr[rt]) {
-				branchNext =
+				branchRCP =
 						mem.mem[rcp.pc + 1] +
 						(signExtend(immediate) << 2);
 			} else {
@@ -276,7 +277,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 			switch (rt) {
 			case 0b00000001: /* BGEZ */
 				if (rcp.gpr[rs] >= 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -285,7 +286,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00010001: /* BGEZAL */
 				rcp.gpr[31] = mem.mem[rcp.pc + 1];
 				if (rcp.gpr[rs] >= 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -294,7 +295,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00010011: /* BGEZALL */
 				rcp.gpr[31] = mem.mem[rcp.pc + 1];
 				if (rcp.gpr[rs] >= 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -304,7 +305,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 				break;
 			case 0b00000011: /* BGEZL */
 				if (rcp.gpr[rs] >= 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -314,7 +315,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 				break;
 			case 0b00000000: /* BLTZ */
 				if (rcp.gpr[rs] < 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -323,7 +324,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00010000: /* BLTZAL */
 				rcp.gpr[31] = mem.mem[rcp.pc + 1];
 				if (rcp.gpr[rs] < 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -332,7 +333,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00010010: /* BLTZALL */
 				rcp.gpr[31] = mem.mem[rcp.pc + 1];
 				if (rcp.gpr[rs] < 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -342,7 +343,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 				break;
 			case 0b00000010: /* BLTZL */
 				if (rcp.gpr[rs] < 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -356,7 +357,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 			switch (rt) {
 			case 0b00000000: /* BGTZ */
 				if (rcp.gpr[rs] > 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -368,7 +369,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 			switch (rt) {
 			case 0b00000000: /* BGTZL */
 				if (rcp.gpr[rs] > 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -382,7 +383,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 			switch (rt) {
 			case 0b00000000: /* BLEZ */
 				if (rcp.gpr[rs] <= 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -394,7 +395,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 			switch (rt) {
 			case 0b00000000: /* BLEZL */
 				if (rcp.gpr[rs] <= 0) {
-					branchNext =
+					branchRCP =
 							mem.mem[rcp.pc + 1] +
 							(signExtend(immediate)
 							 << 2);
@@ -406,14 +407,14 @@ execRCP(uint32_t opcode, bool parseOnly)
 			break;
 		case 0b00000101: /* BNE */
 			if (rcp.gpr[rs] != rcp.gpr[rt]) {
-				branchNext =
+				branchRCP =
 						mem.mem[rcp.pc + 1] +
 						(signExtend(immediate) << 2);
 			}
 			break;
 		case 0b00010101: /* BNEL */
 			if (rcp.gpr[rs] != rcp.gpr[rt]) {
-				branchNext =
+				branchRCP =
 						mem.mem[rcp.pc + 1] +
 						(signExtend(immediate) << 2);
 			} else {
@@ -426,9 +427,9 @@ execRCP(uint32_t opcode, bool parseOnly)
 		default:
 			/* Add unknown opcode! */
 			break;
-			if (branchNext >= 0) {
-				rcp.pc = branchNext;
-				branchNext = -1;
+			if (branchRCP >= 0) {
+				rcp.pc = branchRCP;
+				branchRCP = -1;
 			}
 		}
 	} else {
