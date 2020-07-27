@@ -41,7 +41,7 @@ class UnknownOpcodeException: public std::exception
 
 public:
 	UnknownOpcodeException(uint32_t op)
-	: m_opcode(op)
+		: m_opcode(op)
 	{
 	}
 
@@ -54,7 +54,7 @@ class MIPSInternalException: public std::exception
 
 public:
 	MIPSInternalException(std::string t)
-	: m_type(t)
+		: m_type(t)
 	{
 	}
 
@@ -69,10 +69,10 @@ class IntegerOverflowException: public MIPSInternalException
 
 public:
 	IntegerOverflowException(uint32_t addend1, uint32_t addend2)
-	: MIPSInternalException("Integer overflow")
-	, m_sum(addend1 + addend2)
-	, m_summand1(addend1)
-	, m_summand2(addend2)
+		: MIPSInternalException("Integer overflow")
+		, m_sum(addend1 + addend2)
+		, m_summand1(addend1)
+		, m_summand2(addend2)
 	{
 	}
 
@@ -114,6 +114,13 @@ execCPU(uint32_t opcode, bool parseOnly)
 						break;
 					case 0b00100100: /* AND */
 						reg.gpr[rd] = (reg.gpr[rs] & reg.gpr[rt]);
+						break;
+					case 0b00101100: /* DADD */
+						/* Note: Should only run in 64 bit mode or 32 bit kernel mode. Otherwise throw reserved instruction exception. */
+						if (reg.gpr[rs] < INT_MAX - reg.gpr[rt]) {
+							throw new IntegerOverflowException(reg.gpr[rs], reg.gpr[rt]);
+						}
+						reg.gpr[rd] = ((signed)reg.gpr[rs] + (signed)reg.gpr[rt]);
 					}
 				} else {
 					switch (funct) {
@@ -315,6 +322,43 @@ execCPU(uint32_t opcode, bool parseOnly)
 			case 0b00101111: /* CACHE */
 				/* TODO */
 				break;
+			case 0b00010000:
+				if ((sa == 0) && (funct == 0)) {
+					switch (rs) {
+					case 0b00000010: /* CFC0 */
+						/* TODO */
+						break;
+					}
+				}
+				break;
+			case 0b00010001:
+				if ((sa == 0) && (funct == 0)) {
+					switch (rs) {
+					case 0b00000010: /* CFC1 */
+						/* TODO */
+						break;
+					}
+				}
+				break;
+			case 0b00010010:
+				if ((sa == 0) && (funct == 0)) {
+					switch (rs) {
+					case 0b00000010: /* CFC2 */
+						/* TODO */
+						break;
+					}
+				}
+				break;
+			case 0b00010011:
+				if ((sa == 0) && (funct == 0)) {
+					switch (rs) {
+					case 0b00000010: /* CFC3 */
+						/* TODO */
+						break;
+					}
+				}
+				break;
+
 			default:
 				throw new UnknownOpcodeException(opcode);
 			}
@@ -340,11 +384,87 @@ execCPU(uint32_t opcode, bool parseOnly)
 				if ((sa == 0) && (funct == 0)) {
 					switch (rs) {
 					case 0b00000010: /* CFC0 */
-
+						/* TODO */
 						break;
 					}
 				}
 				break;
+			case 0b00010001:
+				if ((sa == 0) && (funct == 0)) {
+					switch (rs) {
+					case 0b00000010: /* CFC1 */
+						/* TODO */
+						break;
+					}
+				}
+				break;
+			case 0b00010010:
+				if ((sa == 0) && (funct == 0)) {
+					switch (rs) {
+					case 0b00000010: /* CFC2 */
+						/* TODO */
+						break;
+					}
+				}
+				break;
+			case 0b00010011:
+				if ((sa == 0) && (funct == 0)) {
+					switch (rs) {
+					case 0b00000010: /* CFC3 */
+						/* TODO */
+						break;
+					}
+				}
+				break;
+			case 0b00010000:
+				if ((rs & 0b00010000) >> 7) { /* COP0 */
+					/* TODO */
+				}
+				break;
+			case 0b00010001:
+				if ((rs & 0b00010000) >> 7) { /* COP1 */
+					/* TODO */
+				}
+				break;
+			case 0b00010010:
+				if ((rs & 0b00010000) >> 7) { /* COP2 */
+					/* TODO */
+				}
+				break;
+			case 0b00010011:
+				if ((rs & 0b00010000) >> 7) { /* COP3 */
+					/* TODO */
+				}
+				break;
+			case 0b00010000:
+				if (rs == 0b0000110) {
+					if(opcode & 0b00000000000000000000011111111111) { /* CTC0 */
+						/* TODO */
+					}
+				}
+				break;
+			case 0b00010001:
+				if (rs == 0b0000110) {
+					if(opcode & 0b00000000000000000000011111111111) { /* CTC1 */
+						/* TODO */
+					}
+				}
+				break;
+			case 0b00010010:
+				if (rs == 0b0000110) {
+					if(opcode & 0b00000000000000000000011111111111) { /* CTC2 */
+						/* TODO */
+					}
+				}
+				break;
+			case 0b00010011:
+				if (rs == 0b0000110) {
+					if(opcode & 0b00000000000000000000011111111111) { /* CTC3 */
+						/* TODO */
+					}
+				}
+				break;
+
 			default:
 				throw new UnknownOpcodeException(opcode);
 			}

@@ -338,7 +338,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 				break;
 			case 0b00010000:
 				if ((sa == 0) && (funct == 0)) {
-					switch(rs){
+					switch(rs) {
 					case 0b00000010: /* CFC0 */
 
 						break;
