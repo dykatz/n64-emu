@@ -24,8 +24,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef MEM_H
-#define MEM_H
+#pragma once
 
 #include <cstdint>
 
@@ -47,5 +46,3 @@ busread(uint32_t address)
 	}
 }
 #endif
-
-#endif /* MEM_H */

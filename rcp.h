@@ -24,8 +24,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef RCP_H
-#define RCP_H
+#pragma once
 
 #include <cstdint>
 
@@ -34,5 +33,3 @@
 extern Registers rcp;
 
 extern void execRCP(uint32_t opcode, bool parseOnly);
-
-#endif /* RCP_H */

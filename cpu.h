@@ -24,8 +24,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef CPUH
-#define CPUH
+#pragma once
 
 #include <cstdint>
 
@@ -51,5 +50,3 @@ extern uint16_t signExtend(uint8_t);
 extern uint32_t signExtend(uint16_t);
 extern uint64_t signExtend(uint32_t);
 extern void execCPU(uint32_t, bool);
-
-#endif /* CPUH */
