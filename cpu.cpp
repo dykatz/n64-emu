@@ -143,58 +143,145 @@ execCPU(uint32_t opcode, bool parseOnly)
 				reg.gpr[rt] = (reg.gpr[rs] & immediate);
 				break;
 			case 0b00010000:
-				switch (rs) {
-				case 0b00001000:
-					switch (rt) {
-					case 0b00000000: /* BC0F */
+				if ((sa == 0) && (funct == 0)){
+					switch (rs) {
+					case 0b00000010: /* CFC0 */
 						/* TODO */
 						break;
-					case 0b00000010: /* BC0FL */
+					}
+				} else {
+					switch (rs) {
+					case 0b00001000:
+						switch (rt) {
+						case 0b00000000: /* BC0F */
+							/* TODO */
+							break;
+						case 0b00000010: /* BC0FL */
+							/* TODO */
+							break;
+						case 0b00000001: /* BC0T */
+							/* TODO */
+							break;
+						case 0b00000011: /* BC0TL */
+							/* TODO */
+							break;
+						}
+						break;
+					case 0b00010000: /* COP0 */
 						/* TODO */
 						break;
-					case 0b00000001: /* BC0T */
-						/* TODO */
-						break;
-					case 0b00000011: /* BC0TL */
-						/* TODO */
+					case 0b0000110:
+						if(opcode & 0b00000000000000000000011111111111) { /* CTC0 */
+							/* TODO */
+						}
 						break;
 					}
 				}
 				break;
 			case 0b00010001:
-				switch (rs) {
-				case 0b00001000:
-					switch (rt) {
-					case 0b00000000: /* BC1F */
+				if ((sa == 0) && (funct == 0)){
+					switch (rs) {
+					case 0b00000010: /* CFC1 */
 						/* TODO */
 						break;
-					case 0b00000010: /* BC1FL */
+					}
+				} else {
+					switch (rs) {
+					case 0b00001000:
+						switch (rt) {
+						case 0b00000000: /* BC1F */
+							/* TODO */
+							break;
+						case 0b00000010: /* BC1FL */
+							/* TODO */
+							break;
+						case 0b00000001: /* BC1T */
+							/* TODO */
+							break;
+						case 0b00000011: /* BC1TL */
+							/* TODO */
+							break;
+						}
+						break;
+					case 0b00010000: /* COP1 */
 						/* TODO */
 						break;
-					case 0b00000001: /* BC1T */
-						/* TODO */
-						break;
-					case 0b00000011: /* BC1TL */
-						/* TODO */
+					case 0b0000110:
+						if(opcode & 0b00000000000000000000011111111111) { /* CTC1 */
+							/* TODO */
+						}
 						break;
 					}
 				}
 				break;
 			case 0b00010010:
-				switch (rs) {
-				case 0b00001000:
-					switch (rt) {
-					case 0b00000000: /* BC2F */
+				if ((sa == 0) && (funct == 0)){
+					switch (rs) {
+					case 0b00000010: /* CFC2 */
 						/* TODO */
 						break;
-					case 0b00000010: /* BC2FL */
+					}
+				} else {
+					switch (rs) {
+					case 0b00001000:
+						switch (rt) {
+						case 0b00000000: /* BC2F */
+							/* TODO */
+							break;
+						case 0b00000010: /* BC2FL */
+							/* TODO */
+							break;
+						case 0b00000001: /* BC2T */
+							/* TODO */
+							break;
+						case 0b00000011: /* BC2TL */
+							/* TODO */
+							break;
+						}
+						break;
+					case 0b00010000: /* COP2 */
 						/* TODO */
 						break;
-					case 0b00000001: /* BC2T */
+					case 0b0000110:
+						if(opcode & 0b00000000000000000000011111111111) { /* CTC2 */
+							/* TODO */
+						}
+						break;
+					}
+				}
+				break;
+			case 0b00010011:
+				if ((sa == 0) && (funct == 0)){
+					switch (rs) {
+					case 0b00000010: /* CFC3 */
 						/* TODO */
 						break;
-					case 0b00000011: /* BC2TL */
+					}
+				}else{
+					switch (rs) {
+					case 0b00001000:
+						switch (rt) {
+						case 0b00000000: /* BC3F */
+							/* TODO */
+							break;
+						case 0b00000010: /* BC3FL */
+							/* TODO */
+							break;
+						case 0b00000001: /* BC3T */
+							/* TODO */
+							break;
+						case 0b00000011: /* BC3TL */
+							/* TODO */
+							break;
+						}
+						break;
+					case 0b00010000: /* COP3 */
 						/* TODO */
+						break;
+					case 0b0000110:
+						if(opcode & 0b00000000000000000000011111111111) { /* CTC3 */
+							/* TODO */
+						}
 						break;
 					}
 				}
@@ -322,43 +409,6 @@ execCPU(uint32_t opcode, bool parseOnly)
 			case 0b00101111: /* CACHE */
 				/* TODO */
 				break;
-			case 0b00010000:
-				if ((sa == 0) && (funct == 0)) {
-					switch (rs) {
-					case 0b00000010: /* CFC0 */
-						/* TODO */
-						break;
-					}
-				}
-				break;
-			case 0b00010001:
-				if ((sa == 0) && (funct == 0)) {
-					switch (rs) {
-					case 0b00000010: /* CFC1 */
-						/* TODO */
-						break;
-					}
-				}
-				break;
-			case 0b00010010:
-				if ((sa == 0) && (funct == 0)) {
-					switch (rs) {
-					case 0b00000010: /* CFC2 */
-						/* TODO */
-						break;
-					}
-				}
-				break;
-			case 0b00010011:
-				if ((sa == 0) && (funct == 0)) {
-					switch (rs) {
-					case 0b00000010: /* CFC3 */
-						/* TODO */
-						break;
-					}
-				}
-				break;
-
 			default:
 				throw new UnknownOpcodeException(opcode);
 			}
@@ -381,74 +431,146 @@ execCPU(uint32_t opcode, bool parseOnly)
 				/* TODO */
 				break;
 			case 0b00010000:
-				if ((sa == 0) && (funct == 0)) {
+				if ((sa == 0) && (funct == 0)){
 					switch (rs) {
 					case 0b00000010: /* CFC0 */
 						/* TODO */
 						break;
 					}
-				}
-				if ((rs & 0b00010000) >> 7) { /* COP0 */
-					/* TODO */
-					break;
-				}
-				if (rs == 0b0000110) {
-					if(opcode & 0b00000000000000000000011111111111) { /* CTC0 */
+				}else{
+					switch (rs) {
+					case 0b00001000:
+						switch (rt) {
+						case 0b00000000: /* BC0F */
+							/* TODO */
+							break;
+						case 0b00000010: /* BC0FL */
+							/* TODO */
+							break;
+						case 0b00000001: /* BC0T */
+							/* TODO */
+							break;
+						case 0b00000011: /* BC0TL */
+							/* TODO */
+							break;
+						}
+						break;
+					case 0b00010000: /* COP0 */
 						/* TODO */
+						break;
+					case 0b0000110:
+						if(opcode & 0b00000000000000000000011111111111) { /* CTC0 */
+							/* TODO */
+						}
+						break;
 					}
 				}
 				break;
 			case 0b00010001:
-				if ((sa == 0) && (funct == 0)) {
+				if ((sa == 0) && (funct == 0)){
 					switch (rs) {
 					case 0b00000010: /* CFC1 */
 						/* TODO */
 						break;
 					}
-				}
-				if ((rs & 0b00010000) >> 7) { /* COP1 */
-					/* TODO */
-					break;
-				}
-				if (rs == 0b0000110) {
-					if(opcode & 0b00000000000000000000011111111111) { /* CTC1 */
+				}else{
+					switch (rs) {
+					case 0b00001000:
+						switch (rt) {
+						case 0b00000000: /* BC1F */
+							/* TODO */
+							break;
+						case 0b00000010: /* BC1FL */
+							/* TODO */
+							break;
+						case 0b00000001: /* BC1T */
+							/* TODO */
+							break;
+						case 0b00000011: /* BC1TL */
+							/* TODO */
+							break;
+						}
+						break;
+					case 0b00010000: /* COP1 */
 						/* TODO */
+						break;
+					case 0b0000110:
+						if(opcode & 0b00000000000000000000011111111111) { /* CTC1 */
+							/* TODO */
+						}
+						break;
 					}
 				}
 				break;
 			case 0b00010010:
-				if ((sa == 0) && (funct == 0)) {
+				if ((sa == 0) && (funct == 0)){
 					switch (rs) {
 					case 0b00000010: /* CFC2 */
 						/* TODO */
 						break;
 					}
-				}
-				if ((rs & 0b00010000) >> 7) { /* COP2 */
-					/* TODO */
-					break;
-				}
-				if (rs == 0b0000110) {
-					if(opcode & 0b00000000000000000000011111111111) { /* CTC2 */
+				}else{
+					switch (rs) {
+					case 0b00001000:
+						switch (rt) {
+						case 0b00000000: /* BC2F */
+							/* TODO */
+							break;
+						case 0b00000010: /* BC2FL */
+							/* TODO */
+							break;
+						case 0b00000001: /* BC2T */
+							/* TODO */
+							break;
+						case 0b00000011: /* BC2TL */
+							/* TODO */
+							break;
+						}
+						break;
+					case 0b00010000: /* COP2 */
 						/* TODO */
+						break;
+					case 0b0000110:
+						if(opcode & 0b00000000000000000000011111111111) { /* CTC2 */
+							/* TODO */
+						}
+						break;
 					}
 				}
 				break;
 			case 0b00010011:
-				if ((sa == 0) && (funct == 0)) {
+				if ((sa == 0) && (funct == 0)){
 					switch (rs) {
 					case 0b00000010: /* CFC3 */
 						/* TODO */
 						break;
 					}
-				}
-				if ((rs & 0b00010000) >> 7) { /* COP3 */
-					/* TODO */
-					break;
-				}
-				if (rs == 0b0000110) {
-					if(opcode & 0b00000000000000000000011111111111) { /* CTC3 */
+				}else{
+					switch (rs) {
+					case 0b00001000:
+						switch (rt) {
+						case 0b00000000: /* BC3F */
+							/* TODO */
+							break;
+						case 0b00000010: /* BC3FL */
+							/* TODO */
+							break;
+						case 0b00000001: /* BC3T */
+							/* TODO */
+							break;
+						case 0b00000011: /* BC3TL */
+							/* TODO */
+							break;
+						}
+						break;
+					case 0b00010000: /* COP3 */
 						/* TODO */
+						break;
+					case 0b0000110:
+						if(opcode & 0b00000000000000000000011111111111) { /* CTC3 */
+							/* TODO */
+						}
+						break;
 					}
 				}
 				break;

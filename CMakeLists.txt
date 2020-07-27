@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.10)
 project(N64_Emu C CXX)
 
 find_package(SDL2 REQUIRED)
