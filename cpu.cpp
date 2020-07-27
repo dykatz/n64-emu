@@ -26,7 +26,6 @@
 
 #include <climits>
 #include <cstdlib>
-#include <exception>
 #include <iostream>
 #include <string>
 
