@@ -1,0 +1,11 @@
+BasedOnStyle: Mozilla
+
+IndentWidth: 8
+UseTab: Always
+BreakBeforeBraces: Linux
+AllowShortIfStatementsOnASingleLine: false
+IndentCaseLabels: false
+AccessModifierOffset: -8
+ConstructorInitializerIndentWidth: 8
+PointerAlignment: Right
+ContinuationIndentWidth: 8

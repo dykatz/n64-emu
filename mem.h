@@ -28,8 +28,7 @@
 
 #include <cstdint>
 
-struct Memory
-{
+struct Memory {
 	bool expansionPak;
 	uint8_t mem[8388608];
 };

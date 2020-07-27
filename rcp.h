@@ -32,4 +32,5 @@
 
 extern Registers rcp;
 
-extern void execRCP(uint32_t opcode, bool parseOnly);
+extern void
+execRCP(uint32_t opcode, bool parseOnly);

@@ -32,8 +32,7 @@ class UnknownOpcodeException;
 class MIPSInternalException;
 class IntegerOverflowException;
 
-struct Registers
-{
+struct Registers {
 	uint64_t pc;
 	uint64_t hi;
 	uint64_t lo;
@@ -49,4 +48,6 @@ extern Registers reg;
 extern uint16_t signExtend(uint8_t);
 extern uint32_t signExtend(uint16_t);
 extern uint64_t signExtend(uint32_t);
-extern void execCPU(uint32_t, bool);
+
+extern void
+execCPU(uint32_t, bool);

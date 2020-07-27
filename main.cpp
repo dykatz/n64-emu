@@ -24,15 +24,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <cstdlib>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <exception>
-#include <climits>
 #include <SDL.h>
-#include "mem.h"
+#include <climits>
+#include <cstdlib>
+#include <exception>
+#include <fstream>
+#include <iostream>
+#include <string>
+
 #include "cpu.h"
+#include "mem.h"
 #include "rcp.h"
 
 extern Registers reg;
