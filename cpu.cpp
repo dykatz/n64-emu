@@ -55,36 +55,34 @@ execCPU(uint32_t opcode, bool parseOnly)
 				switch (funct) {
 				case 0b00100000: /* ADD */
 					if (reg.gpr[rs] <
-							INT_MAX - reg.gpr[rt]) {
+					    INT_MAX - reg.gpr[rt]) {
 						/* Add integer overflow code! */
 					}
-					reg.gpr[rd] =
-							((signed)reg.gpr[rs] +
-							 (signed)reg.gpr[rt]);
+					reg.gpr[rd] = ((signed)reg.gpr[rs] +
+						       (signed)reg.gpr[rt]);
 					break;
 				case 0b00100001: /* ADDU */
-					reg.gpr[rd] = (reg.gpr[rs] +
-						       reg.gpr[rt]);
+					reg.gpr[rd] =
+						(reg.gpr[rs] + reg.gpr[rt]);
 					break;
 				case 0b00100100: /* AND */
-					reg.gpr[rd] = (reg.gpr[rs] &
-						       reg.gpr[rt]);
+					reg.gpr[rd] =
+						(reg.gpr[rs] & reg.gpr[rt]);
 					break;
 				case 0b00101100: /* DADD */
 					/*
-						 * Note: Should only run in 64
-						 * bit mode or 32 bit kernel
-						 * mode. Otherwise throw
-						 * reserved instruction
-						 * exception.
-						 */
+					 * Note: Should only run in 64
+					 * bit mode or 32 bit kernel
+					 * mode. Otherwise throw
+					 * reserved instruction
+					 * exception.
+					 */
 					if (reg.gpr[rs] <
-							INT_MAX - reg.gpr[rt]) {
+					    INT_MAX - reg.gpr[rt]) {
 						/* Add integer overflow code! */
 					}
-					reg.gpr[rd] =
-							((signed)reg.gpr[rs] +
-							 (signed)reg.gpr[rt]);
+					reg.gpr[rd] = ((signed)reg.gpr[rs] +
+						       (signed)reg.gpr[rt]);
 				}
 			} else {
 				switch (funct) {
@@ -96,15 +94,14 @@ execCPU(uint32_t opcode, bool parseOnly)
 			break;
 		case 0b00001000: /* ADDI */
 			if (reg.gpr[rs] <
-					INT_MAX - reg.gpr[signExtend(immediate)]) {
+			    INT_MAX - reg.gpr[signExtend(immediate)]) {
 				/* Add integer overflow code! */
 			}
 			reg.gpr[rt] = ((signed)reg.gpr[rs] +
 				       (signed)signExtend(immediate));
 			break;
 		case 0b00001001: /* ADDIU */
-			reg.gpr[rt] =
-					(reg.gpr[rs] + signExtend(immediate));
+			reg.gpr[rt] = (reg.gpr[rs] + signExtend(immediate));
 			break;
 		case 0b00001100: /* ANDI */
 			reg.gpr[rt] = (reg.gpr[rs] & immediate);
@@ -139,7 +136,7 @@ execCPU(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC0 */
+					    0b00000000000000000000011111111111) { /* CTC0 */
 						/* TODO */
 					}
 					break;
@@ -176,7 +173,7 @@ execCPU(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC1 */
+					    0b00000000000000000000011111111111) { /* CTC1 */
 						/* TODO */
 					}
 					break;
@@ -213,7 +210,7 @@ execCPU(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC2 */
+					    0b00000000000000000000011111111111) { /* CTC2 */
 						/* TODO */
 					}
 					break;
@@ -250,7 +247,7 @@ execCPU(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC3 */
+					    0b00000000000000000000011111111111) { /* CTC3 */
 						/* TODO */
 					}
 					break;
@@ -259,16 +256,14 @@ execCPU(uint32_t opcode, bool parseOnly)
 			break;
 		case 0b00000100: /* BEQ */
 			if (reg.gpr[rs] == reg.gpr[rt]) {
-				branchNext =
-						mem.mem[reg.pc + 1] +
-						(signExtend(immediate) << 2);
+				branchNext = mem.mem[reg.pc + 1] +
+					     (signExtend(immediate) << 2);
 			}
 			break;
 		case 0b00010100: /* BEQL */
 			if (reg.gpr[rs] == reg.gpr[rt]) {
-				branchNext =
-						mem.mem[reg.pc + 1] +
-						(signExtend(immediate) << 2);
+				branchNext = mem.mem[reg.pc + 1] +
+					     (signExtend(immediate) << 2);
 			} else {
 				reg.pc++;
 			}
@@ -278,27 +273,24 @@ execCPU(uint32_t opcode, bool parseOnly)
 			case 0b00000001: /* BGEZ */
 				if (reg.gpr[rs] >= 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			case 0b00010001: /* BGEZAL */
 				reg.gpr[31] = mem.mem[reg.pc + 1];
 				if (reg.gpr[rs] >= 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			case 0b00010011: /* BGEZALL */
 				reg.gpr[31] = mem.mem[reg.pc + 1];
 				if (reg.gpr[rs] >= 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					reg.pc++;
 				}
@@ -306,9 +298,8 @@ execCPU(uint32_t opcode, bool parseOnly)
 			case 0b00000011: /* BGEZL */
 				if (reg.gpr[rs] >= 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					reg.pc++;
 				}
@@ -316,27 +307,24 @@ execCPU(uint32_t opcode, bool parseOnly)
 			case 0b00000000: /* BLTZ */
 				if (reg.gpr[rs] < 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			case 0b00010000: /* BLTZAL */
 				reg.gpr[31] = mem.mem[reg.pc + 1];
 				if (reg.gpr[rs] < 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			case 0b00010010: /* BLTZALL */
 				reg.gpr[31] = mem.mem[reg.pc + 1];
 				if (reg.gpr[rs] < 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					reg.pc++;
 				}
@@ -344,9 +332,8 @@ execCPU(uint32_t opcode, bool parseOnly)
 			case 0b00000010: /* BLTZL */
 				if (reg.gpr[rs] < 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					reg.pc++;
 				}
@@ -358,9 +345,8 @@ execCPU(uint32_t opcode, bool parseOnly)
 			case 0b00000000: /* BGTZ */
 				if (reg.gpr[rs] > 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			}
@@ -370,9 +356,8 @@ execCPU(uint32_t opcode, bool parseOnly)
 			case 0b00000000: /* BGTZL */
 				if (reg.gpr[rs] > 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					reg.pc++;
 				}
@@ -384,9 +369,8 @@ execCPU(uint32_t opcode, bool parseOnly)
 			case 0b00000000: /* BLEZ */
 				if (reg.gpr[rs] <= 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			}
@@ -396,9 +380,8 @@ execCPU(uint32_t opcode, bool parseOnly)
 			case 0b00000000: /* BLEZL */
 				if (reg.gpr[rs] <= 0) {
 					branchNext =
-							mem.mem[reg.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[reg.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					reg.pc++;
 				}
@@ -407,16 +390,14 @@ execCPU(uint32_t opcode, bool parseOnly)
 			break;
 		case 0b00000101: /* BNE */
 			if (reg.gpr[rs] != reg.gpr[rt]) {
-				branchNext =
-						mem.mem[reg.pc + 1] +
-						(signExtend(immediate) << 2);
+				branchNext = mem.mem[reg.pc + 1] +
+					     (signExtend(immediate) << 2);
 			}
 			break;
 		case 0b00010101: /* BNEL */
 			if (reg.gpr[rs] != reg.gpr[rt]) {
-				branchNext =
-						mem.mem[reg.pc + 1] +
-						(signExtend(immediate) << 2);
+				branchNext = mem.mem[reg.pc + 1] +
+					     (signExtend(immediate) << 2);
 			} else {
 				reg.pc++;
 			}
@@ -476,7 +457,7 @@ execCPU(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC0 */
+					    0b00000000000000000000011111111111) { /* CTC0 */
 						/* TODO */
 					}
 					break;
@@ -513,7 +494,7 @@ execCPU(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC1 */
+					    0b00000000000000000000011111111111) { /* CTC1 */
 						/* TODO */
 					}
 					break;
@@ -550,7 +531,7 @@ execCPU(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC2 */
+					    0b00000000000000000000011111111111) { /* CTC2 */
 						/* TODO */
 					}
 					break;
@@ -587,7 +568,7 @@ execCPU(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC3 */
+					    0b00000000000000000000011111111111) { /* CTC3 */
 						/* TODO */
 					}
 					break;

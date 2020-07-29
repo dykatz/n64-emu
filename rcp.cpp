@@ -29,8 +29,8 @@
 #include <iostream>
 #include <string>
 
-#include "rcp.h"
 #include "mem.h"
+#include "rcp.h"
 
 static int branchRCP = -1;
 
@@ -55,36 +55,34 @@ execRCP(uint32_t opcode, bool parseOnly)
 				switch (funct) {
 				case 0b00100000: /* ADD */
 					if (rcp.gpr[rs] <
-							INT_MAX - rcp.gpr[rt]) {
+					    INT_MAX - rcp.gpr[rt]) {
 						/* Add integer overflow code! */
 					}
-					rcp.gpr[rd] =
-							((signed)rcp.gpr[rs] +
-							 (signed)rcp.gpr[rt]);
+					rcp.gpr[rd] = ((signed)rcp.gpr[rs] +
+						       (signed)rcp.gpr[rt]);
 					break;
 				case 0b00100001: /* ADDU */
-					rcp.gpr[rd] = (rcp.gpr[rs] +
-						       rcp.gpr[rt]);
+					rcp.gpr[rd] =
+						(rcp.gpr[rs] + rcp.gpr[rt]);
 					break;
 				case 0b00100100: /* AND */
-					rcp.gpr[rd] = (rcp.gpr[rs] &
-						       rcp.gpr[rt]);
+					rcp.gpr[rd] =
+						(rcp.gpr[rs] & rcp.gpr[rt]);
 					break;
 				case 0b00101100: /* DADD */
 					/*
-						 * Note: Should only run in 64
-						 * bit mode or 32 bit kernel
-						 * mode. Otherwise throw
-						 * reserved instruction
-						 * exception.
-						 */
+					 * Note: Should only run in 64
+					 * bit mode or 32 bit kernel
+					 * mode. Otherwise throw
+					 * reserved instruction
+					 * exception.
+					 */
 					if (rcp.gpr[rs] <
-							INT_MAX - rcp.gpr[rt]) {
+					    INT_MAX - rcp.gpr[rt]) {
 						/* Add integer overflow code! */
 					}
-					rcp.gpr[rd] =
-							((signed)rcp.gpr[rs] +
-							 (signed)rcp.gpr[rt]);
+					rcp.gpr[rd] = ((signed)rcp.gpr[rs] +
+						       (signed)rcp.gpr[rt]);
 				}
 			} else {
 				switch (funct) {
@@ -96,15 +94,14 @@ execRCP(uint32_t opcode, bool parseOnly)
 			break;
 		case 0b00001000: /* ADDI */
 			if (rcp.gpr[rs] <
-					INT_MAX - rcp.gpr[signExtend(immediate)]) {
+			    INT_MAX - rcp.gpr[signExtend(immediate)]) {
 				/* Add integer overflow code! */
 			}
 			rcp.gpr[rt] = ((signed)rcp.gpr[rs] +
 				       (signed)signExtend(immediate));
 			break;
 		case 0b00001001: /* ADDIU */
-			rcp.gpr[rt] =
-					(rcp.gpr[rs] + signExtend(immediate));
+			rcp.gpr[rt] = (rcp.gpr[rs] + signExtend(immediate));
 			break;
 		case 0b00001100: /* ANDI */
 			rcp.gpr[rt] = (rcp.gpr[rs] & immediate);
@@ -139,7 +136,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC0 */
+					    0b00000000000000000000011111111111) { /* CTC0 */
 						/* TODO */
 					}
 					break;
@@ -176,7 +173,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC1 */
+					    0b00000000000000000000011111111111) { /* CTC1 */
 						/* TODO */
 					}
 					break;
@@ -213,7 +210,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC2 */
+					    0b00000000000000000000011111111111) { /* CTC2 */
 						/* TODO */
 					}
 					break;
@@ -250,7 +247,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC3 */
+					    0b00000000000000000000011111111111) { /* CTC3 */
 						/* TODO */
 					}
 					break;
@@ -259,16 +256,14 @@ execRCP(uint32_t opcode, bool parseOnly)
 			break;
 		case 0b00000100: /* BEQ */
 			if (rcp.gpr[rs] == rcp.gpr[rt]) {
-				branchRCP =
-						mem.mem[rcp.pc + 1] +
-						(signExtend(immediate) << 2);
+				branchRCP = mem.mem[rcp.pc + 1] +
+					    (signExtend(immediate) << 2);
 			}
 			break;
 		case 0b00010100: /* BEQL */
 			if (rcp.gpr[rs] == rcp.gpr[rt]) {
-				branchRCP =
-						mem.mem[rcp.pc + 1] +
-						(signExtend(immediate) << 2);
+				branchRCP = mem.mem[rcp.pc + 1] +
+					    (signExtend(immediate) << 2);
 			} else {
 				rcp.pc++;
 			}
@@ -278,27 +273,24 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00000001: /* BGEZ */
 				if (rcp.gpr[rs] >= 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			case 0b00010001: /* BGEZAL */
 				rcp.gpr[31] = mem.mem[rcp.pc + 1];
 				if (rcp.gpr[rs] >= 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			case 0b00010011: /* BGEZALL */
 				rcp.gpr[31] = mem.mem[rcp.pc + 1];
 				if (rcp.gpr[rs] >= 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					rcp.pc++;
 				}
@@ -306,9 +298,8 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00000011: /* BGEZL */
 				if (rcp.gpr[rs] >= 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					rcp.pc++;
 				}
@@ -316,27 +307,24 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00000000: /* BLTZ */
 				if (rcp.gpr[rs] < 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			case 0b00010000: /* BLTZAL */
 				rcp.gpr[31] = mem.mem[rcp.pc + 1];
 				if (rcp.gpr[rs] < 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			case 0b00010010: /* BLTZALL */
 				rcp.gpr[31] = mem.mem[rcp.pc + 1];
 				if (rcp.gpr[rs] < 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					rcp.pc++;
 				}
@@ -344,9 +332,8 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00000010: /* BLTZL */
 				if (rcp.gpr[rs] < 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					rcp.pc++;
 				}
@@ -358,9 +345,8 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00000000: /* BGTZ */
 				if (rcp.gpr[rs] > 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			}
@@ -370,9 +356,8 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00000000: /* BGTZL */
 				if (rcp.gpr[rs] > 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					rcp.pc++;
 				}
@@ -384,9 +369,8 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00000000: /* BLEZ */
 				if (rcp.gpr[rs] <= 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				}
 				break;
 			}
@@ -396,9 +380,8 @@ execRCP(uint32_t opcode, bool parseOnly)
 			case 0b00000000: /* BLEZL */
 				if (rcp.gpr[rs] <= 0) {
 					branchRCP =
-							mem.mem[rcp.pc + 1] +
-							(signExtend(immediate)
-							 << 2);
+						mem.mem[rcp.pc + 1] +
+						(signExtend(immediate) << 2);
 				} else {
 					rcp.pc++;
 				}
@@ -407,16 +390,14 @@ execRCP(uint32_t opcode, bool parseOnly)
 			break;
 		case 0b00000101: /* BNE */
 			if (rcp.gpr[rs] != rcp.gpr[rt]) {
-				branchRCP =
-						mem.mem[rcp.pc + 1] +
-						(signExtend(immediate) << 2);
+				branchRCP = mem.mem[rcp.pc + 1] +
+					    (signExtend(immediate) << 2);
 			}
 			break;
 		case 0b00010101: /* BNEL */
 			if (rcp.gpr[rs] != rcp.gpr[rt]) {
-				branchRCP =
-						mem.mem[rcp.pc + 1] +
-						(signExtend(immediate) << 2);
+				branchRCP = mem.mem[rcp.pc + 1] +
+					    (signExtend(immediate) << 2);
 			} else {
 				rcp.pc++;
 			}
@@ -476,7 +457,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC0 */
+					    0b00000000000000000000011111111111) { /* CTC0 */
 						/* TODO */
 					}
 					break;
@@ -513,7 +494,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC1 */
+					    0b00000000000000000000011111111111) { /* CTC1 */
 						/* TODO */
 					}
 					break;
@@ -550,7 +531,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC2 */
+					    0b00000000000000000000011111111111) { /* CTC2 */
 						/* TODO */
 					}
 					break;
@@ -587,7 +568,7 @@ execRCP(uint32_t opcode, bool parseOnly)
 					break;
 				case 0b0000110:
 					if (opcode &
-							0b00000000000000000000011111111111) { /* CTC3 */
+					    0b00000000000000000000011111111111) { /* CTC3 */
 						/* TODO */
 					}
 					break;
@@ -600,4 +581,3 @@ execRCP(uint32_t opcode, bool parseOnly)
 		}
 	}
 }
-
