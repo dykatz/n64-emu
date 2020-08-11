@@ -40,10 +40,10 @@ extern Registers rcp;
 
 /*
  * Personal Notes:
- * -COP0 is
+ * -COP0 is the MMU
  * -COP1 is an internal 64-bit FPU
- * -COP2 is
- * -COP3 is
+ * -COP2 is the RCP
+ * -COP3 is unused and can (probably) be ignored
  */
 
 int

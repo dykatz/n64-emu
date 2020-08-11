@@ -35,6 +35,14 @@ struct Memory {
 
 extern Memory mem;
 
+struct TLB {
+
+};
+
+struct MMURegister{
+
+};
+
 #if 0
 uint8_t
 busread(uint32_t address)
