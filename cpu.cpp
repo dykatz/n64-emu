@@ -35,7 +35,7 @@
 static int branchNext = -1;
 
 void
-execCPU(uint32_t opcode, bool parseOnly)
+execCPU(uint32_t opcode, int context, bool parseOnly)
 {
 	uint8_t op = (opcode & 0b11111100000000000000000000000000) >> 26;
 	/* I-Type (Immediate) variables */
@@ -80,9 +80,22 @@ execCPU(uint32_t opcode, bool parseOnly)
 					if (reg.gpr[rs] <
 					    INT_MAX - reg.gpr[rt]) {
 						/* Add integer overflow code! */
+					} else {
+						reg.gpr[rd] = ((signed)reg.gpr[rs] +
+							       (signed)reg.gpr[rt]);
 					}
+					break;
+				case 0b00101101: /* DADDU */
+					/*
+					 * Note: Should only run in 64
+					 * bit mode or 32 bit kernel
+					 * mode. Otherwise throw
+					 * reserved instruction
+					 * exception.
+					 */
 					reg.gpr[rd] = ((signed)reg.gpr[rs] +
 						       (signed)reg.gpr[rt]);
+					break;
 				}
 			} else {
 				switch (funct) {
@@ -91,7 +104,6 @@ execCPU(uint32_t opcode, bool parseOnly)
 					break;
 				}
 			}
-			break;
 		case 0b00001000: /* ADDI */
 			if (reg.gpr[rs] <
 			    INT_MAX - reg.gpr[signExtend(immediate)]) {
@@ -405,6 +417,32 @@ execCPU(uint32_t opcode, bool parseOnly)
 		case 0b00101111: /* CACHE */
 			/* TODO */
 			break;
+		case 0b00011000: /* DADDI */
+			/*
+			 * Note: Should only run in 64
+			 * bit mode or 32 bit kernel
+			 * mode. Otherwise throw
+			 * reserved instruction
+			 * exception.
+			 */
+			if (reg.gpr[rs] <
+			    INT_MAX - reg.gpr[rt]) {
+				/* Add integer overflow code! */
+			} else {
+				reg.gpr[rt] = (signExtend(immediate) +
+					       (signed)reg.gpr[rs]);
+			}
+		break;
+		case 0b00011001: /* DADDIU */
+			/*
+			 * Note: Should only run in 64
+			 * bit mode or 32 bit kernel
+			 * mode. Otherwise throw
+			 * reserved instruction
+			 * exception.
+			 */
+			reg.gpr[rt] = (signExtend(immediate) +
+				       (signed)reg.gpr[rs]);
 		default:
 			/* Add unknown opcode! */
 			break;
@@ -413,6 +451,7 @@ execCPU(uint32_t opcode, bool parseOnly)
 				branchNext = -1;
 			}
 		}
+		/* Interpreter ends HERE, parser follows */
 	} else {
 		switch (op) {
 		case 0b00000000: /* ADD */
