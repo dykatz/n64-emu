@@ -14,7 +14,7 @@ Dependency   | Description                  | License
 [sqlite3][2] | Data storage and persistance | Public domain
 [cubeb][3]   | Audio management             | ISC
 [bgfx][4]    | 3D accelerated graphics      | BSD 2-Clause
-[imgui][5]   | Immediate mode UI            | MIT
+[imgui][5]   | Immediate mode UI (vendored) | MIT
 
 [1]: https://libsdl.org
 [2]: https://sqlite.org/index.html
@@ -33,8 +33,9 @@ them all under unique permissive licenses was not intentional, but is amusing.
 Building
 --------
 
-Your distro will almost certainly have Sqlite and SDL2 packaged. For the
-remaining three, building from source can be done as follows:
+Your distro will almost certainly have Sqlite and SDL2 packaged. IMGUI is
+included within the `//gui/` directory. For the remaining two, building from
+source can be done as follows:
 
 ```sh
 mkdir ~/path/to/deps
@@ -55,9 +56,6 @@ cmake ../cubeb
 make
 sudo make install
 cd ..
-
-git clone --depth=1 https://github.com/ocornut/imgui
-cd imgui
 ```
 
 License

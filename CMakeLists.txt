@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(N64_Emu C CXX)
+project(N64_Emu CXX)
 
 find_package(SDL2 REQUIRED)
 find_package(bgfx REQUIRED)
@@ -22,7 +22,12 @@ add_executable(${PROJECT_NAME}
 	global.cpp
 	cpu.cpp
 	mem.cpp
-	rcp.cpp)
+	rcp.cpp
+	gui/imgui.cpp
+	gui/imgui_draw.cpp
+	#gui/imgui_impl_bgfx.cpp
+	gui/imgui_impl_sdl.cpp
+	gui/imgui_widgets.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${BGFX_LIBRARIES})
