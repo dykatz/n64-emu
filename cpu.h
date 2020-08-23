@@ -46,4 +46,4 @@ extern uint32_t signExtend(uint16_t);
 extern uint64_t signExtend(uint32_t);
 
 extern void
-execCPU(uint32_t, bool);
+execCPU(uint32_t, int, bool);

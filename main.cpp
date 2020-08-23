@@ -60,7 +60,7 @@ tick()
 {
 	for (long long i = 0; i < 31248125; i++) {
 		for (int j = 0; j < 3; j++) {
-			execCPU(mem.mem[reg.pc], false);
+			execCPU(mem.mem[reg.pc], 0, false);
 			reg.pc++;
 		}
 		for (int k = 0; k < 2; k++) {
