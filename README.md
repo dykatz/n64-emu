@@ -41,10 +41,10 @@ source can be done as follows:
 mkdir ~/path/to/deps
 cd ~/path/to/deps
 
-git clone --depth=1 --recursive https://github.com/widberg/bgfx.cmake
+git clone --depth=1 --recursive https://github.com/pr0g/bgfx.cmake
 mkdir bgfx-build
 cd bgfx-build
-cmake ../bgfx.cmake
+cmake -DBGFX_BUILD_EXAMPLES=OFF ../bgfx.cmake
 make
 sudo make install
 cd ..

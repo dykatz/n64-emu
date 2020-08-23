@@ -25,11 +25,11 @@ add_executable(${PROJECT_NAME}
 	rcp.cpp
 	gui/imgui.cpp
 	gui/imgui_draw.cpp
-	#gui/imgui_impl_bgfx.cpp
+	gui/imgui_impl_bgfx.cpp
 	gui/imgui_impl_sdl.cpp
 	gui/imgui_widgets.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} ${BGFX_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} bgfx::bgfx)
 target_link_libraries(${PROJECT_NAME} ${CUBEB_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${SQLITE3_LIBRARIES})
